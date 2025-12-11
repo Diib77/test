@@ -2,46 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Aperture | Security Research Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTF Write-ups | Dashboard</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    
     <style>
-        :root { --bg: #0f0f23; --card: #1a1a2e; --text: #eaeaea; --accent: #00ff88; }
-        body { font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px; }
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 20px auto; }
-        .card { background: var(--card); padding: 20px; border-radius: 8px; border: 1px solid #333; transition: 0.3s; color: inherit; text-decoration: none; position: relative; overflow: hidden; }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 0 15px rgba(0,255,136,0.08); }
-        .badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-        .htb { background: #9fee00; color: #000; }
-        .thm { background: #ff1b1b; color: #fff; }
-        .title { font-size: 1.2rem; font-weight: bold; display: block; margin-bottom: 6px; }
-        .difficulty { color: #aaa; font-size: 0.9rem; }
-        p.summary { font-size: 0.95rem; color: #b8bcc5; margin-top: 10px; }
-        a.card-link { color: inherit; text-decoration: none; }
+        /* Modern CSS Variables & Reset */
+        :root { 
+            --bg: #010409;          /* Deep Dark Background */
+            --card: #0d1117;        /* Subtle Card Background */
+            --border: #30363d;      /* Low Contrast Border */
+            --text-high: #c9d1d9;   /* High Contrast Text */
+            --text-low: #8b949e;    /* Muted Text */
+            --accent-green: #2ea44f;/* Success/Primary Action */
+            --accent-blue: #58a6ff; /* Link/Info Color */
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text-high); margin: 0; padding: 0; }
+        
+        /* Layout */
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 0 40px 60px; }
+        .grid-layout { display: flex; gap: 40px; margin-top: 40px; }
+        .main-content { flex-grow: 3; }
+        .sidebar { flex-grow: 1; min-width: 300px; }
+        @media (max-width: 900px) { .grid-layout { flex-direction: column; } .sidebar { min-width: auto; } }
+
+        /* Header / Nav Bar */
+        .navbar { background: #0a0c10; padding: 15px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .logo { font-size: 1.6rem; font-weight: 700; color: var(--accent-blue); }
+        .nav-links a { color: var(--text-high); margin-left: 25px; text-decoration: none; transition: color 0.2s; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--accent-green); }
+
+        /* Sidebar - Professional Info */
+        .profile-card { background: var(--card); padding: 25px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 30px; }
+        .profile-card h2 { color: var(--accent-green); border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-top: 0; font-size: 1.4rem; }
+        .profile-card ul { list-style: none; padding: 0; }
+        .profile-card li { margin-bottom: 10px; font-size: 0.9rem; color: var(--text-low); }
+        .profile-card strong { color: var(--text-high); }
+
+        /* Main Content - Filters & Grid */
+        h3 { color: var(--text-high); font-size: 2rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .filter-controls { display: flex; gap: 15px; margin-bottom: 30px; align-items: center; flex-wrap: wrap; }
+        .filter-controls button { 
+            background: var(--card); color: var(--text-low); border: 1px solid var(--border); padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: background 0.2s, border-color 0.2s; 
+        }
+        .filter-controls button.active, .filter-controls button:hover { 
+            background: var(--accent-green); color: var(--bg); border-color: var(--accent-green); font-weight: 600; 
+        }
+
+        /* The Write-up Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .card { 
+            background: var(--card); border-radius: 8px; border: 1px solid var(--border); transition: 0.3s; text-decoration: none; color: inherit; position: relative; overflow: hidden; 
+        }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(88, 166, 255, 0.1); }
+
+        /* Card Content */
+        .card-content { padding: 20px; }
+        .platform-badge { position: absolute; top: 0; right: 0; background: var(--accent-blue); color: var(--bg); padding: 5px 10px; border-bottom-left-radius: 6px; font-size: 0.8rem; font-weight: 700; }
+        .title { font-size: 1.3rem; font-weight: 600; margin-bottom: 5px; color: var(--accent-green); }
+        .difficulty { color: var(--text-low); font-size: 0.9rem; margin-bottom: 10px; }
+        .summary { color: var(--text-low); font-size: 0.9rem; line-height: 1.4; }
     </style>
 </head>
-<body>
-    <header>
-        <h1>The Archives</h1>
-        <div class="subtitle" style="color:#9aa0a6;">A collection of CTF write-ups and mission logs.</div>
-    </header>
+<body x-data="portfolioData">
 
-    <div class="grid">
-        <a href="viewer.html?post=writeups/example-room.md" class="card card-link">
-            <span class="badge htb">HTB</span>
-            <span class="title">Blue</span>
-            <span class="difficulty">Difficulty: Easy</span>
-            <p class="summary">Exploiting Windows EternalBlue (MS17-010) manual and Metasploit.</p>
-        </a>
-
-        <a href="#" class="card card-link">
-            <span class="badge thm">THM</span>
-            <span class="title">Kenobi</span>
-            <span class="difficulty">Difficulty: Easy</span>
-            <p class="summary">Exploiting Samba, SUID binaries, and Docker.</p>
-        </a>
+    <div class="navbar">
+        <div class="logo">APERTURE // Research & Development</div>
+        <div class="nav-links">
+            <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+            <a href="https://github.com/yourprofile" target="_blank">Repository</a>
+            <a href="mailto:your.email@example.com">Contact</a>
+        </div>
     </div>
 
+    <div class="main-container grid-layout">
+        
+        <aside class="sidebar">
+            <div class="profile-card">
+                <h2>Cyber Specialist</h2>
+                <p style="color: var(--text-low);">
+                    Senior penetration tester specializing in red team operations and cloud security architecture. Focused on high-impact vulnerabilities and scalable defense strategies.
+                </p>
+            </div>
+
+            <div class="profile-card">
+                <h2>Technical Proficiencies</h2>
+                <ul>
+                    <li>**Certifications:** OSCE, AWS Security Specialty, CISSP (Candidate)</li>
+                    <li>**Tool Chains:** Burp Suite Pro, BloodHound, Nessus, Ghidra</li>
+                    <li>**Development:** Proficient in **GoLang**, Python (Flask/Django), C</li>
+                    <li>**Architecture:** Docker, Kubernetes, Terraform (IaC)</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <h3>Exploitation Logs</h3>
+
+            <div class="filter-controls">
+                <p style="margin: 0; color: var(--text-low);">Filter by:</p>
+                <button @click="filter = 'all'" :class="{ 'active': filter === 'all' }">All Projects</button>
+                <button @click="filter = 'htb'" :class="{ 'active': filter === 'htb' }">HackTheBox</button>
+                <button @click="filter = 'thm'" :class="{ 'active': filter === 'thm' }">TryHackMe</button>
+                <button @click="filter = 'easy'" :class="{ 'active': filter === 'easy' }">Easy</button>
+                <button @click="filter = 'hard'" :class="{ 'active': filter === 'hard' }">Hard</button>
+            </div>
+
+            <div class="grid" x-cloak>
+                <template x-for="item in filteredList()" :key="item.id">
+                    <a :href="item.link" class="card">
+                        <div class="platform-badge" 
+                             :style="item.platform === 'HTB' ? 'background: #9fee00; color: #000;' : 'background: #ff1b1b; color: #fff;'">
+                             <span x-text="item.platform"></span>
+                        </div>
+                        <div class="card-content">
+                            <span class="title" x-text="item.title"></span>
+                            <span class="difficulty" x-text="item.difficulty"></span>
+                            <p class="summary" x-text="item.summary"></p>
+                        </div>
+                    </a>
+                </template>
+
+                <div x-show="filteredList().length === 0" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                    No logs match the current filter criteria.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('portfolioData', () => ({
+                filter: 'all',
+                logs: [
+                    // Your data source. In a real app, this would be fetched from an API endpoint.
+                    { id: 1, title: "Blue", platform: "HTB", difficulty: "Easy", summary: "Automated exploit analysis of the MS17-010 vulnerability.", link: "viewer.html?post=writeups/example-room.md" },
+                    { id: 2, title: "Optimum", platform: "HTB", difficulty: "Easy", summary: "Exploiting a File Upload Vulnerability and privilege escalation via an unquoted service path.", link: "#" },
+                    { id: 3, title: "Kenobi", platform: "THM", difficulty: "Easy", summary: "Samba exploitation and SUID abuse on a Linux target.", link: "#" },
+                    { id: 4, title: "DevOps", platform: "THM", difficulty: "Medium", summary: "Container escape techniques and Kubernetes misconfiguration.", link: "#" },
+                    { id: 5, title: "Prestige", platform: "HTB", difficulty: "Hard", summary: "Complex exploit development involving heap manipulation in a custom binary.", link: "#" },
+                ],
+                
+                filteredList() {
+                    if (this.filter === 'all') {
+                        return this.logs;
+                    }
+                    if (this.filter === 'htb') {
+                        return this.logs.filter(log => log.platform === 'HTB');
+                    }
+                    if (this.filter === 'thm') {
+                        return this.logs.filter(log => log.platform === 'THM');
+                    }
+                    if (this.filter === 'easy') {
+                        return this.logs.filter(log => log.difficulty === 'Easy');
+                    }
+                    if (this.filter === 'hard') {
+                        return this.logs.filter(log => log.difficulty === 'Hard');
+                    }
+                    return this.logs;
+                }
+            }));
+        });
+    </script>
 </body>
 </html>
