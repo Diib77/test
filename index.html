@@ -3,105 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Pages Status: Operational</title>
+    <title>My Write-Ups</title>
     <style>
-        /* CSS for Styling Test */
-        :root {
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --accent-color: #2ea44f; /* GitHub Green */
-        }
-
-        body.dark-mode {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --text-color: #c9d1d9;
-            --accent-color: #58a6ff; /* GitHub Blue */
-        }
-
+        /* Modern Reset & Base Styles */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f4f6f8;
+            color: #333;
             margin: 0;
-            transition: background-color 0.3s, color 0.3s;
+            padding: 40px 20px;
         }
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        header {
             text-align: center;
-            max-width: 400px;
-            width: 90%;
+            margin-bottom: 50px;
         }
 
-        .status-dot {
-            height: 15px;
-            width: 15px;
-            background-color: var(--accent-color);
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
         }
 
-        h1 { margin-bottom: 0.5rem; }
-        
-        button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* The Grid Layout */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* The Card Styling */
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            font-size: 1rem;
-            margin-top: 20px;
-            transition: opacity 0.2s;
+            display: flex;
+            flex-direction: column;
         }
 
-        button:hover { opacity: 0.9; }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .card-summary {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-            <span class="status-dot"></span>
-            <strong>System Online</strong>
-        </div>
-        <h1>GitHub Pages Test</h1>
-        <p>If you can read this, your HTML and CSS are working correctly.</p>
-        
-        <button id="jsTestBtn">Test JavaScript</button>
-        
-        <p id="jsOutput" style="margin-top: 15px; font-size: 0.9rem; min-height: 1.2em;"></p>
+    <header>
+        <h1>The Archives</h1>
+        <div class="subtitle">A collection of thoughts, stories, and write-ups.</div>
+    </header>
+
+    <div id="app" class="gallery-grid">
+        <p style="text-align:center; width:100%;">Loading articles...</p>
     </div>
 
     <script>
-        // JavaScript for Interactivity Test
-        const btn = document.getElementById('jsTestBtn');
-        const output = document.getElementById('jsOutput');
-        const body = document.body;
+        // Fetch the JSON data
+        fetch('articles.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('app');
+                container.innerHTML = ''; // Clear loading text
 
-        btn.addEventListener('click', () => {
-            // 1. Toggle Dark Mode
-            body.classList.toggle('dark-mode');
-            
-            // 2. Update Text
-            if (body.classList.contains('dark-mode')) {
-                output.innerText = "JS Executed: Dark Mode Active 🌙";
-                btn.innerText = "Switch to Light Mode";
-            } else {
-                output.innerText = "JS Executed: Light Mode Active ☀️";
-                btn.innerText = "Switch to Dark Mode";
-            }
-        });
+                data.forEach(article => {
+                    // Create the HTML structure for each card
+                    const cardHTML = `
+                        <a href="${article.link}" class="card-link">
+                            <article class="card">
+                                <img src="${article.image}" alt="${article.title}" class="card-image">
+                                <div class="card-content">
+                                    <h2 class="card-title">${article.title}</h2>
+                                    <p class="card-summary">${article.summary}</p>
+                                </div>
+                            </article>
+                        </a>
+                    `;
+                    // Append to the grid
+                    container.innerHTML += cardHTML;
+                });
+            })
+            .catch(error => {
+                console.error('Error loading articles:', error);
+                document.getElementById('app').innerHTML = '<p>Error loading content. Please check articles.json.</p>';
+            });
     </script>
+
 </body>
 </html>
