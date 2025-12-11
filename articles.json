@@ -1,0 +1,38 @@
+[
+  {
+    "title": "The Future of AI Testing",
+    "image": "https://picsum.photos/id/1/600/400",
+    "summary": "Exploring how we validate language models in 2025.",
+    "link": "#"
+  },
+  {
+    "title": "Minimalist Web Design",
+    "image": "https://picsum.photos/id/180/600/400",
+    "summary": "Why less is often more when building for the modern web.",
+    "link": "#"
+  },
+  {
+    "title": "A Journey Through Morocco",
+    "image": "https://picsum.photos/id/306/600/400",
+    "summary": "Travel diaries from the streets of Fes and beyond.",
+    "link": "#"
+  },
+  {
+    "title": "Coding with Coffee",
+    "image": "https://picsum.photos/id/425/600/400",
+    "summary": "The essential fuel for late-night debugging sessions.",
+    "link": "#"
+  },
+  {
+    "title": "Understanding GitHub Pages",
+    "image": "https://picsum.photos/id/4/600/400",
+    "summary": "A deep dive into static site hosting and deployment.",
+    "link": "#"
+  },
+  {
+    "title": "Photography Basics",
+    "image": "https://picsum.photos/id/250/600/400",
+    "summary": "How to capture the perfect shot with natural light.",
+    "link": "#"
+  }
+]
