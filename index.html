@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Status: Operational</title>
+    <style>
+        /* CSS for Styling Test */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #2ea44f; /* GitHub Green */
+        }
+
+        body.dark-mode {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff; /* GitHub Blue */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .status-dot {
+            height: 15px;
+            width: 15px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        h1 { margin-bottom: 0.5rem; }
+        
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <span class="status-dot"></span>
+            <strong>System Online</strong>
+        </div>
+        <h1>GitHub Pages Test</h1>
+        <p>If you can read this, your HTML and CSS are working correctly.</p>
+        
+        <button id="jsTestBtn">Test JavaScript</button>
+        
+        <p id="jsOutput" style="margin-top: 15px; font-size: 0.9rem; min-height: 1.2em;"></p>
+    </div>
+
+    <script>
+        // JavaScript for Interactivity Test
+        const btn = document.getElementById('jsTestBtn');
+        const output = document.getElementById('jsOutput');
+        const body = document.body;
+
+        btn.addEventListener('click', () => {
+            // 1. Toggle Dark Mode
+            body.classList.toggle('dark-mode');
+            
+            // 2. Update Text
+            if (body.classList.contains('dark-mode')) {
+                output.innerText = "JS Executed: Dark Mode Active 🌙";
+                btn.innerText = "Switch to Light Mode";
+            } else {
+                output.innerText = "JS Executed: Light Mode Active ☀️";
+                btn.innerText = "Switch to Dark Mode";
+            }
+        });
+    </script>
+</body>
+</html>
