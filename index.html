@@ -3,131 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Write-Ups</title>
+    <title>CTF Write-ups | Dashboard</title>
     <style>
-        /* Modern Reset & Base Styles */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f8;
-            color: #333;
-            margin: 0;
-            padding: 40px 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
-        /* The Grid Layout */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* The Card Styling */
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background-color: #eee;
-        }
-
-        .card-content {
-            padding: 20px;
-            flex-grow: 1;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-        }
-
-        .card-summary {
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.5;
-            margin: 0;
-        }
-
-        .card-link {
-            text-decoration: none;
-            color: inherit;
-        }
+        :root { --bg: #0f0f23; --card: #1a1a2e; --text: #eaeaea; --accent: #00ff88; }
+        body { font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 20px auto; }
+        .card { background: var(--card); padding: 20px; border-radius: 8px; border: 1px solid #333; transition: 0.3s; color: inherit; text-decoration: none; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 0 15px rgba(0,255,136,0.08); }
+        .badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .htb { background: #9fee00; color: #000; }
+        .thm { background: #ff1b1b; color: #fff; }
+        .title { font-size: 1.2rem; font-weight: bold; display: block; margin-bottom: 6px; }
+        .difficulty { color: #aaa; font-size: 0.9rem; }
+        p.summary { font-size: 0.95rem; color: #b8bcc5; margin-top: 10px; }
+        a.card-link { color: inherit; text-decoration: none; }
     </style>
 </head>
 <body>
-
     <header>
         <h1>The Archives</h1>
-        <div class="subtitle">A collection of thoughts, stories, and write-ups.</div>
+        <div class="subtitle" style="color:#9aa0a6;">A collection of CTF write-ups and mission logs.</div>
     </header>
 
-    <div id="app" class="gallery-grid">
-        <p style="text-align:center; width:100%;">Loading articles...</p>
+    <div class="grid">
+        <a href="viewer.html?post=writeups/example-room.md" class="card card-link">
+            <span class="badge htb">HTB</span>
+            <span class="title">Blue</span>
+            <span class="difficulty">Difficulty: Easy</span>
+            <p class="summary">Exploiting Windows EternalBlue (MS17-010) manual and Metasploit.</p>
+        </a>
+
+        <a href="#" class="card card-link">
+            <span class="badge thm">THM</span>
+            <span class="title">Kenobi</span>
+            <span class="difficulty">Difficulty: Easy</span>
+            <p class="summary">Exploiting Samba, SUID binaries, and Docker.</p>
+        </a>
     </div>
-
-    <script>
-        // Fetch the JSON data
-        fetch('articles.json')
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('app');
-                container.innerHTML = ''; // Clear loading text
-
-                data.forEach(article => {
-                    // Create the HTML structure for each card
-                    const cardHTML = `
-                        <a href="${article.link}" class="card-link">
-                            <article class="card">
-                                <img src="${article.image}" alt="${article.title}" class="card-image">
-                                <div class="card-content">
-                                    <h2 class="card-title">${article.title}</h2>
-                                    <p class="card-summary">${article.summary}</p>
-                                </div>
-                            </article>
-                        </a>
-                    `;
-                    // Append to the grid
-                    container.innerHTML += cardHTML;
-                });
-            })
-            .catch(error => {
-                console.error('Error loading articles:', error);
-                document.getElementById('app').innerHTML = '<p>Error loading content. Please check articles.json.</p>';
-            });
-    </script>
 
 </body>
 </html>
